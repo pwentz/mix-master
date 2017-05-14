@@ -1,8 +1,9 @@
 (ns mix-master.core)
 ; As a user
-; When I visit the artists index
-; And I click "New artist"
-; And I fill in the name
-; And I fill in an image path
-; And I click "Create Artist"
-; Then I should see the artist name and image on the page
+; Given that artists exist in the database
+; When I visit the artist songs index
+; And I click "New song"
+; And I fill in the title
+; And I click "Create Song"
+; Then I should see the song name
+; And I should see a link to the song artist's individual page
