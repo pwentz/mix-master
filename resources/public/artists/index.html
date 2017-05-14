@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mix Master</title>
+  </head>
+  <body>
+    <a href="/artists/new">New Artist</a>
+    <h1>Artists</h1>
+    {{#artists}}
+      <p>
+        <span>Name:</span> {{name}}
+      </p>
+      <p>
+        <span>Image:</span> {{image}}
+      </p>
+      <hr>
+    {{/artists}}
+  </body>
+</html>

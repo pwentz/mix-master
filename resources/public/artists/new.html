@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mix Master</title>
+  </head>
+  <body>
+    <form action="/artists/create" method="post">
+      <input id="__anti-forgery-token" name="__anti-forgery-token" type="hidden" value={{ anti-forgery-field }} />
+      <label for="name">Artist Name:</label>
+      <input type="text" id="name" name="artist-name"/>
+      <br>
+      <label for="image">Image Path:</label>
+      <input type="text" id="image" name="artist-image"/>
+      <br>
+      <button type="submit" name="submit">Create Artist</button>
+    </form>
+  </body>
+</html>
