@@ -4,17 +4,19 @@
             [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
             [ring.util.response :as ring]
             [mix-master.util :refer [render]]
-            [mix-master.artists.songs.repository :as db]))
-
-(defn create-song [{title :song-title artist-id :artist-id}]
-  (when (and title artist-id)
-    (db/create {:title title :artist-id artist-id})))
+            [mix-master.db.core :as db]))
 
 (defn response [{body :body}]
   (assoc
   {:status 200
    :headers {"Content-Type" "text/html"}}
    :body body))
+
+(defn create-song [{title :song-title artist-id :artist-id}]
+  (when (and title artist-id)
+    (db/create :songs
+               {:title title :artist-id artist-id}))
+  (response {:body {}}))
 
 (defroutes songs-routes
   (GET "/" [artist-id] (response

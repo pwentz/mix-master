@@ -1,25 +1,48 @@
-(ns mix-master.db.core)
-(require '[clojure.java.jdbc :as j]
-         '[environ.core :refer [env]])
-(use 'korma.db)
-(use 'korma.core)
-
-(def database-url
-  (env :database-url))
-
-(def db-name
-  (subs database-url (.indexOf database-url "mix-master")))
-
-(def pg-uri
-  {:connection-uri (str database-url)})
-
-(def pg-map {:host "localhost"
-             :port "5432"
-             :db db-name
-             :make-pool? true})
-
-(defdb korma-db (postgres pg-map))
+(ns mix-master.db.core
+  (:require [korma.core :refer :all]
+            [mix-master.db.config :refer :all]
+            [mix-master.util :refer [kebab-case-keys
+                                     snake-case-keys]]))
 
 (defentity artists)
 (defentity songs
   (belongs-to artists))
+
+(def tables
+  {:artists artists
+   :songs songs})
+
+(defn generate-id []
+  (rand-int 999999))
+
+(defn format-params [attrs]
+  (->> (generate-id)
+       (assoc attrs :id)
+       (snake-case-keys)))
+
+(defn all [ent]
+  (select (ent tables)))
+
+(defn find-first [ent attrs]
+  (kebab-case-keys
+    (first
+      (select (ent tables)
+        (where attrs)))))
+
+(defn delete-all [ent]
+  (delete (ent tables)))
+
+(defn- create-record [table attrs]
+  (->> attrs
+       (snake-case-keys)
+       (values)
+       (insert table)))
+
+(defn create [ent {id :id, :or {id (generate-id)} :as attrs}]
+  (create-record (ent tables)
+                 (assoc attrs :id id)))
+
+(defn count-of [ent]
+  ((comp :cnt first)
+    (select (ent tables)
+      (aggregate (count :*) :cnt))))

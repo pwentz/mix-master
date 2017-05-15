@@ -2,8 +2,7 @@
   (:require [speclj.core :refer :all]
             [mix-master.artists.songs.root :refer :all]
             [ring.mock.request :refer [request]]
-            [mix-master.artists.repository :as artists]
-            [mix-master.artists.songs.repository :as db]))
+            [mix-master.db.core :as db]))
 
 (describe "songs-routes"
   (context "/"
@@ -16,13 +15,13 @@
       (let [response (songs-handler (request :get "/new"))]
         (should= 200 (:status response)))))
 
-  (context "/post"
+  (context "/create"
     (before
-      (artists/create {:name "Bob Marley" :id 12}))
+      (db/create :artists {:name "Bob Marley" :id 12}))
 
     (after
-      (db/delete-all)
-      (artists/delete-all))
+      (db/delete-all :songs)
+      (db/delete-all :artists))
 
     (it "creates a song"
       (let [response (songs-handler (assoc (request :post "/create")
@@ -31,4 +30,4 @@
                                             :artist-id 12}))]
         (should= 200 (:status response))
         (should= 12
-                 (:artist-id (db/find-first {:title "One Love"})))))))
+                 (:artist-id (db/find-first :songs {:title "One Love"})))))))
