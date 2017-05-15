@@ -2,16 +2,15 @@
   (:require [korma.core :as k]
             [mix-master.db.core :refer :all]))
 
-(k/defentity artists)
-
 (defn generate-id []
   (rand-int 999999))
 
 (defn all [] (k/select artists))
 
-(defn create [{first-name :name image :image :as attrs}]
-  (let [artist-data (assoc attrs :id (generate-id))]
-    (k/insert artists (k/values artist-data))))
+(defn create [{first-name :name image :image id :id :as attrs}]
+  (if id
+    (k/insert artists (k/values attrs))
+    (k/insert artists (k/values (assoc attrs :id (generate-id))))))
 
 (defn find-first [attrs]
   (first

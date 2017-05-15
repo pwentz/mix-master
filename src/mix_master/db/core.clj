@@ -2,6 +2,7 @@
 (require '[clojure.java.jdbc :as j]
          '[environ.core :refer [env]])
 (use 'korma.db)
+(use 'korma.core)
 
 (def database-url
   (env :database-url))
@@ -18,3 +19,7 @@
              :make-pool? true})
 
 (defdb korma-db (postgres pg-map))
+
+(defentity artists)
+(defentity songs
+  (belongs-to artists))

@@ -34,4 +34,16 @@
                                          :image "www.u2.com"})]
           (should= "U2" (:name new-artist))
           (should= "www.u2.com" (:image new-artist))
-          (should= 1 (db/entity-count))))))
+          (should= 1 (db/entity-count)))))
+
+  (context "/:artist-id/songs"
+    (before
+      (db/create {:name "Foo Fighters"}))
+
+    (after
+      (db/delete-all))
+
+    (it "responds with a 200 status"
+      (let [artist-id (:id (db/find-first {:name "Foo Fighters"}))
+            response (artists-handler (request :get (str "/" artist-id)))]
+        (should= 200 (:status response))))))
