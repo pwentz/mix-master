@@ -2,7 +2,7 @@
   (:require [speclj.core :refer :all]
             [mix-master.artists.root :refer :all]
             [ring.mock.request :refer [request]]
-            [mix-master.artists.repository :as db]))
+            [mix-master.db.core :as db]))
 
 (describe "artists-routes"
   (context "/"
@@ -17,7 +17,7 @@
 
   (context "/create"
     (after
-      (db/delete-all))
+      (db/delete-all :artists))
 
     (it "responds with a 302 status"
         (let [response (artists-handler (assoc (request :post "/create")
@@ -30,8 +30,20 @@
               response (artists-handler (assoc (request :post "/create")
                                                :form-params
                                                form-params))
-              new-artist (db/find-first {:name "U2"
-                                         :image "www.u2.com"})]
+              new-artist (db/find-first :artists {:name "U2"
+                                                  :image "www.u2.com"})]
           (should= "U2" (:name new-artist))
           (should= "www.u2.com" (:image new-artist))
-          (should= 1 (db/entity-count))))))
+          (should= 1 (db/count-of :artists)))))
+
+  (context "/:artist-id/songs"
+    (before
+      (db/create :artists {:name "Foo Fighters"}))
+
+    (after
+      (db/delete-all :artists))
+
+    (it "responds with a 200 status"
+      (let [artist-id (:id (db/find-first :artists {:name "Foo Fighters"}))
+            response (artists-handler (request :get (str "/" artist-id)))]
+        (should= 200 (:status response))))))

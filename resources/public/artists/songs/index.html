@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mix Master</title>
+  </head>
+  <body>
+    <h2>{{artist-name}}</h2>
+    <a href="/artists/{{artist-id}}/songs/new">Create Song</a>
+    {{#songs}}
+      <p>
+        <span>Title:</span> {{title}}
+      </p>
+      <hr>
+    {{/songs}}
+  </body>
+</html>
