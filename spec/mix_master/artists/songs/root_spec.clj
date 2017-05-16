@@ -7,7 +7,8 @@
 (describe "songs-routes"
   (context "/"
     (it "responds with a 200 status"
-      (let [response (songs-handler (request :get "/"))]
+      (let [request (assoc (request :get "/") :params {:artist-id "1"})
+            response (songs-handler request)]
         (should= 200 (:status response)))))
 
   (context "/new"
@@ -28,6 +29,6 @@
                                            :params
                                            {:song-title "One Love"
                                             :artist-id 12}))]
-        (should= 200 (:status response))
+        (should= 302 (:status response))
         (should= 12
                  (:artist-id (db/find-first :songs {:title "One Love"})))))))

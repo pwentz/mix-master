@@ -23,11 +23,20 @@
 (defn all [ent]
   (select (ent tables)))
 
-(defn find-first [ent attrs]
-  (kebab-case-keys
-    (first
+(defn- select-where [ent attrs]
+  (let [attrs (snake-case-keys attrs)]
+    (map kebab-case-keys
       (select (ent tables)
         (where attrs)))))
+
+(defn find-first [ent attrs]
+  (first (select-where ent attrs)))
+
+(defn find-by-id [ent id]
+  (find-first ent {:id (Integer. id)}))
+
+(defn artist-songs [artist-id]
+  (select-where :songs {:artist-id (Integer. artist-id)}))
 
 (defn delete-all [ent]
   (delete (ent tables)))

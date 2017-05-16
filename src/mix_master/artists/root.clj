@@ -1,7 +1,7 @@
 (ns mix-master.artists.root
   (:require [compojure.core :refer :all]
             [compojure.route :as route ]
-            [ring.middleware.anti-forgery :refer [*anti-forgery-token*]]
+            [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.util.response :as ring]
             [mix-master.util :refer [render]]
             [mix-master.db.core :as db]
@@ -24,7 +24,7 @@
   (GET "/new" [] {:status 200
                   :headers {"Content-Type" "text/html"}
                   :body (render "artists/new"
-                                {:anti-forgery-field *anti-forgery-token*})})
+                                {:anti-forgery-field (anti-forgery-field)})})
   (POST "/create" request (create-artist request))
 
   (context "/:artist-id" [artist-id]
