@@ -8,9 +8,14 @@
 (defentity songs
   (belongs-to artists))
 
+(defentity playlists)
+(defentity playlist_songs)
+
 (def tables
   {:artists artists
-   :songs songs})
+   :songs songs
+   :playlists playlists
+   :playlist-songs playlist_songs})
 
 (defn generate-id []
   (rand-int 999999))
@@ -23,20 +28,20 @@
 (defn all [ent]
   (select (ent tables)))
 
-(defn- select-where [ent attrs]
+(defn find-all [ent attrs]
   (let [attrs (snake-case-keys attrs)]
     (map kebab-case-keys
       (select (ent tables)
         (where attrs)))))
 
 (defn find-first [ent attrs]
-  (first (select-where ent attrs)))
+  (first (find-all ent attrs)))
 
 (defn find-by-id [ent id]
   (find-first ent {:id (Integer. id)}))
 
 (defn artist-songs [artist-id]
-  (select-where :songs {:artist-id (Integer. artist-id)}))
+  (find-all :songs {:artist-id (Integer. artist-id)}))
 
 (defn delete-all [ent]
   (delete (ent tables)))
@@ -55,3 +60,8 @@
   ((comp :cnt first)
     (select (ent tables)
       (aggregate (count :*) :cnt))))
+
+(select songs
+  (join playlist_songs (= :playlist_songs.song_id :id))
+  (join playlists (= :playlists.id :playlist_songs.playlist_id))
+  (where {:playlists.name "Dope Jamz"}))

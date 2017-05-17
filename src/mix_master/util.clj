@@ -19,3 +19,9 @@
 
 (defn kebab-case-keys [attrs]
   (case-format ->kebab-case attrs))
+
+(defn render-with-layout
+  ([file-name map-to-render]
+   (render "layout"
+           {:page-content (render file-name map-to-render)}))
+  ([file-name] (render-with-layout file-name {})))
