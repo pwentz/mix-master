@@ -28,7 +28,7 @@
       (let [response (songs-handler (assoc (request :post "/create")
                                            :params
                                            {:song-title "One Love"
-                                            :artist-id 12}))]
+                                            :artist-id "12"}))]
         (should= 302 (:status response))
         (should= 12
                  (:artist-id (db/find-first :songs {:title "One Love"})))))))

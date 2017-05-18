@@ -1,15 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Mix Master</title>
-  </head>
-  <body>
-    <form action="/artists/{{artist-id}}/songs/create" method="post">
-      {{{anti-forgery-field}}}
-      <label for="title">Song Title:</label>
-      <input type="text" id="title" name="song-title"/>
-      <br>
-      <button type="submit" name="submit">Create Song</button>
-    </form>
-  </body>
-</html>
+<form action="/artists/{{artist-id}}/songs/create" method="post">
+  {{{anti-forgery-field}}}
+  <label for="title">Song Title:</label>
+  <input type="text" id="title" name="song-title"/>
+  <br>
+  <button type="submit" name="submit">Create Song</button>
+</form>

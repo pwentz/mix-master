@@ -1,0 +1,12 @@
+<form action="/playlists/create" method="post">
+  {{{anti-forgery-field}}}
+  <label for="name">Playlist Name:</label>
+  <input type="text" id="name" name="playlist-name" />
+  <br>
+  {{#songs}}
+    <label for="song-title">{{title}}</label>
+    <input type="checkBox" id="song-title" name={{id}} />
+    <br>
+  {{/songs}}
+  <button type="submit" name="submit">Submit</button>
+</form>
