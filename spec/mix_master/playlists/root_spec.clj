@@ -31,8 +31,7 @@
     (it "creates a playlist with selected songs"
       (let [req (assoc (request :post "/create")
                        :params
-                       {:playlist-name "My Jamz", 10 "on", 12 "on"})
+                       {"playlist-name" "My Jamz", "10" "on", "12" "on"})
             response (playlists-handler req)]
         (should= "My Jamz" (:name (db/find-first :playlists {:name "My Jamz"})))
-        (should= #{10 12} ()))
-      )))
+        (should= #{10 12} (into #{} (map :id (db/songs-by-playlist {:name "My Jamz"}))))))))

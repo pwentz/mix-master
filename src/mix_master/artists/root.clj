@@ -3,7 +3,8 @@
             [compojure.route :as route ]
             [ring.util.anti-forgery :refer [anti-forgery-field]]
             [ring.util.response :as ring]
-            [mix-master.util :refer [render]]
+            [mix-master.util :refer [render-with-layout
+                                     response]]
             [mix-master.db.core :as db]
             [mix-master.artists.songs.root :refer [songs-handler]]))
 
@@ -17,14 +18,10 @@
     (ring/redirect "/artists")))
 
 (defroutes artists-routes
-  (GET "/" [] {:status 200
-               :headers {"Content-Type" "text/html"}
-               :body (render "artists/index"
-                             {:artists (db/all :artists)})})
-  (GET "/new" [] {:status 200
-                  :headers {"Content-Type" "text/html"}
-                  :body (render "artists/new"
-                                {:anti-forgery-field (anti-forgery-field)})})
+  (GET "/" [] (response (render-with-layout "artists/index"
+                                            {:artists (db/all :artists)})))
+  (GET "/new" [] (response (render-with-layout "artists/new"
+                                               {:anti-forgery-field (anti-forgery-field)})))
   (POST "/create" request (create-artist request))
 
   (context "/:artist-id" [artist-id]

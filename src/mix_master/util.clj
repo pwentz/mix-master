@@ -25,3 +25,8 @@
    (render "layout"
            {:page-content (render file-name map-to-render)}))
   ([file-name] (render-with-layout file-name {})))
+
+(defn response [body]
+  {:status 200
+   :headers {"Content-Type" "text/html"}}
+   :body body)

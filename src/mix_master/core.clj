@@ -1,4 +1,5 @@
-(ns mix-master.core)
+(ns mix-master.core
+  (:require [mix-master.db.core :as db]))
 ; As a user
 ; Given that artists exist in the database
 ; When I visit the artist songs index

@@ -61,7 +61,12 @@
     (select (ent tables)
       (aggregate (count :*) :cnt))))
 
-(select songs
-  (join playlist_songs (= :playlist_songs.song_id :id))
-  (join playlists (= :playlists.id :playlist_songs.playlist_id))
-  (where {:playlists.name "Dope Jamz"}))
+(defn prepend-entity-to-key [entry]
+  [(keyword (str "playlists." (name (key entry)))) (val entry)])
+
+(defn songs-by-playlist [attrs]
+  (let [playlist-attrs (into {} (map prepend-entity-to-key attrs))]
+    (select songs
+      (join playlist_songs (= :playlist_songs.song_id :id))
+      (join playlists (= :playlists.id :playlist_songs.playlist_id))
+      (where playlist-attrs))))
